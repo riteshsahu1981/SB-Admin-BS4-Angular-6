@@ -8,7 +8,7 @@
             <i class="fa fa-fw fa-bar-chart-o"></i>&nbsp;
             <span>{{ 'Charts' | translate }}</span>
         </a>
-        <a [routerLink]="['/tables']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+       <!-- RKS <a [routerLink]="['/tables']" [routerLinkActive]="['router-link-active']" class="list-group-item">
             <i class="fa fa-fw fa-table"></i>&nbsp;
             <span>{{ 'Tables' | translate }}</span>
         </a>
@@ -64,9 +64,9 @@
             <i class="fa fa-caret-down"></i>&nbsp;
             <span>{{ 'More Themes' | translate }}</span>
         </a>
-
+		-->
         <div class="header-fields">
-            <a (click)="rltAndLtr()" class="list-group-item">
+           <!-- RKS <a (click)="rltAndLtr()" class="list-group-item">
                 <span><i class="fa fa-arrows-h"></i>&nbsp; RTL/LTR</span>
             </a>
             <div class="nested-menu">
@@ -113,6 +113,7 @@
                     </ul>
                 </li>
             </div>
+			-->
             <div class="nested-menu">
                 <a class="list-group-item" (click)="addExpandClass('profile')">
                     <span><i class="fa fa-user"></i>&nbsp; John Smith</span>
@@ -124,7 +125,7 @@
                                 <span><i class="fa fa-fw fa-user"></i> {{ 'Profile' | translate }}</span>
                             </a>
                         </li>
-                        <li>
+                        <!-- RKS <li>
                             <a href="javascript:void(0)">
                                 <span><i class="fa fa-fw fa-envelope"></i> {{ 'Inbox' | translate }}</span>
                             </a>
@@ -134,6 +135,7 @@
                                 <span><i class="fa fa-fw fa-gear"></i> {{ 'Settings' | translate }}</span>
                             </a>
                         </li>
+						-->
                         <li>
                             <a [routerLink]="['/login']" (click)="onLoggedout()">
                                 <span><i class="fa fa-fw fa-power-off"></i> {{ 'Log Out' | translate }}</span>
