@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { routerTransition } from '../../router.animations';
+import { GameserviceService } from '../../gameservice.service';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 @Component({
     selector: 'app-charts',
@@ -9,6 +12,7 @@ import { routerTransition } from '../../router.animations';
 })
 export class ChartsComponent implements OnInit {
     // bar chart
+	public sales: any ;
     public barChartOptions: any = {
         scaleShowVerticalLines: false,
         responsive: true
@@ -25,11 +29,11 @@ export class ChartsComponent implements OnInit {
     public barChartType: string = 'bar';
     public barChartLegend: boolean = true;
 
-    public barChartData: any[] = [
+    /* public barChartData: any[] = [
         { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
         { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' }
-    ];
-
+    ]; */
+	public barChartData: any[];
     // Doughnut
     public doughnutChartLabels: string[] = [
         'Download Sales',
@@ -158,7 +162,30 @@ export class ChartsComponent implements OnInit {
          */
     }
 
-    constructor() {}
+    constructor(public gameserviceService: GameserviceService, private route: ActivatedRoute, private router: Router) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+		this.getSales();
+	}
+/* 	getSales(): void {
+		this.sales=this.gameserviceService.getSales() ;
+		
+		this.barChartData  = [
+			{ data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
+			{ data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' },
+			{ data: [28, 48, 40, 19, 86, 27, 90], label: 'Series C' }
+		];
+
+	} */
+	
+	 getSales() {
+	 
+		this.sales = [];
+		this.gameserviceService.getSales().subscribe((data: {}) => {
+		  console.log(data);
+		  this.sales = data;
+		});
+		
+		 
+	  }
 }
