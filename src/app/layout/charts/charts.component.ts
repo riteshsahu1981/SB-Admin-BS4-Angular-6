@@ -1,64 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import {  Component, OnInit } from '@angular/core';
 import { routerTransition } from '../../router.animations';
 import { GameserviceService } from '../../gameservice.service';
 import { ActivatedRoute, Router } from '@angular/router';
-
-
+import { Chart } from 'chart.js';
 @Component({
     selector: 'app-charts',
     templateUrl: './charts.component.html',
     styleUrls: ['./charts.component.scss'],
     animations: [routerTransition()]
 })
+
 export class ChartsComponent implements OnInit {
-    // bar chart
-	public sales: any ;
-    public barChartOptions: any = {
-        scaleShowVerticalLines: false,
-        responsive: true
-    };
-    public barChartLabels: string[] = [
-        '2006',
-        '2007',
-        '2008',
-        '2009',
-        '2010',
-        '2011',
-        '2012'
-    ];
-    public barChartType: string = 'bar';
-    public barChartLegend: boolean = true;
-
-    /* public barChartData: any[] = [
-        { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
-        { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' }
-    ]; */
-	public barChartData: any[];
-    // Doughnut
-    public doughnutChartLabels: string[] = [
-        'Download Sales',
-        'In-Store Sales',
-        'Mail-Order Sales'
-    ];
-    public doughnutChartData: number[] = [350, 450, 100];
-    public doughnutChartType: string = 'doughnut';
-
-    // Radar
-    public radarChartLabels: string[] = [
-        'Eating',
-        'Drinking',
-        'Sleeping',
-        'Designing',
-        'Coding',
-        'Cycling',
-        'Running'
-    ];
-    public radarChartData: any = [
-        { data: [65, 59, 90, 81, 56, 55, 40], label: 'Series A' },
-        { data: [28, 48, 40, 19, 96, 27, 100], label: 'Series B' }
-    ];
-    public radarChartType: string = 'radar';
-
+    public mychart = [];
+	public years = [];
+	public selectedYear : any;
+	public gamesReleasesData: any;
+	public selectedAge : any;
+	public gamesAgeData : any;
+	public age=[];
+	public genre = [];
+	public selectedGenre="Action";
+	public gamesGenreData: any;
+ 
     // Pie
     public pieChartLabels: string[] = [
         'Download Sales',
@@ -67,20 +30,7 @@ export class ChartsComponent implements OnInit {
     ];
     public pieChartData: number[] = [300, 500, 100];
     public pieChartType: string = 'pie';
-
-    // PolarArea
-    public polarAreaChartLabels: string[] = [
-        'Download Sales',
-        'In-Store Sales',
-        'Mail Sales',
-        'Telesales',
-        'Corporate Sales'
-    ];
-    public polarAreaChartData: number[] = [300, 500, 100, 40, 120];
-    public polarAreaLegend: boolean = true;
-
-    public polarAreaChartType: string = 'polarArea';
-
+ 
     // lineChart
     public lineChartData: Array<any> = [
         { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
@@ -134,58 +84,130 @@ export class ChartsComponent implements OnInit {
     // events
     public chartClicked(e: any): void {
         // console.log(e);
+		alert("I am clicked");
     }
 
     public chartHovered(e: any): void {
         // console.log(e);
     }
 
-    public randomize(): void {
-        // Only Change 3 values
-        const data = [
-            Math.round(Math.random() * 100),
-            59,
-            80,
-            Math.random() * 100,
-            56,
-            Math.random() * 100,
-            40
-        ];
-        const clone = JSON.parse(JSON.stringify(this.barChartData));
-        clone[0].data = data;
-        this.barChartData = clone;
-        /**
-         * (My guess), for Angular to recognize the change in the dataset
-         * it has to change the dataset variable directly,
-         * so one way around it, is to clone the data, change it and then
-         * assign it;
-         */
-    }
 
-    constructor(public gameserviceService: GameserviceService, private route: ActivatedRoute, private router: Router) {}
+    constructor(public gameserviceService: GameserviceService) {
+	}
 
     ngOnInit() {
-		this.getSales();
+		this.getSales();//barchart
+		this.getYears();
+		this.selectedYear=2017;
+		this.onYearSelected(this.selectedYear);
+		
+		this.getAge();
+		this.selectedAge=18;
+		this.onAgeSelected(this.selectedAge);
+		
+		this.genre = ["NonGame","Indie","Action","Adventure", "Casual", "Strategy","RPG" ,"Simulation", "EarlyAccess", "FreeToPlay", "Sports", "Racing", "MassivelyMultiplayer" ];
+		this.onGenreSelected(this.selectedGenre);
 	}
-/* 	getSales(): void {
-		this.sales=this.gameserviceService.getSales() ;
-		
-		this.barChartData  = [
-			{ data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
-			{ data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' },
-			{ data: [28, 48, 40, 19, 86, 27, 90], label: 'Series C' }
-		];
-
-	} */
 	
-	 getSales() {
-	 
-		this.sales = [];
-		this.gameserviceService.getSales().subscribe((data: {}) => {
-		  console.log(data);
-		  this.sales = data;
+	getYears(){
+		this.gameserviceService.getYears().subscribe((data: {}) => {
+			
+			for ( let  key in data){
+				this.years[key]=data[key].ReleaseYear;				
+			}
+			 
 		});
-		
-		 
-	  }
+	}
+	onYearSelected(val:any){
+		this.gameserviceService.getGamesReleases(val).subscribe((data: {}) => {
+			console.log(data);
+			this.gamesReleasesData=data
+		});
+	}
+	getAge(){
+		this.gameserviceService.getAge().subscribe((data: {}) => {
+			for ( let  key in data){
+				this.age[key]=data[key].RequiredAge;				
+			} 
+		});
+	}
+	
+	onAgeSelected(val:any){
+		this.gameserviceService.getGamesAge(val).subscribe((data: {}) => {
+			console.log(data);
+			this.gamesAgeData=data
+		});
+	}
+	
+	onGenreSelected(val:any){
+		this.gameserviceService.getGamesGenre(val).subscribe((data: {}) => {
+			console.log(data);
+			this.gamesGenreData=data
+		});
+	}
+	
+	getSales() {
+		this.gameserviceService.getSales().subscribe((salesdata: {}) => {
+			let salecount: any=[];
+			let salelable: any=[];
+			for ( let  key in salesdata){
+				salecount[key]=salesdata[key].total_sales;
+				salelable[key]=salesdata[key].publisher.substring(0,10);
+				
+			}
+			this.mychart = new Chart("canvas", {
+				type: 'bar',
+				data: {
+					labels: salelable,
+					datasets: [
+						{
+							label: "Game wise sales chart",
+							data:salecount,
+							backgroundColor: [
+							'rgba(255, 99, 132, 0.2)',
+							'rgba(54, 162, 235, 0.2)',
+							'rgba(255, 206, 86, 0.2)',
+							'rgba(75, 192, 192, 0.2)',
+							'rgba(153, 102, 255, 0.2)',
+							'rgba(255, 159, 64, 0.2)',
+							'rgba(255, 99, 132, 0.2)',
+							'rgba(54, 162, 235, 0.2)',
+							'rgba(255, 206, 86, 0.2)',
+							'rgba(75, 192, 192, 0.2)'
+							],
+							borderColor: [
+							'rgba(255,99,132,1)',
+							'rgba(54, 162, 235, 1)',
+							'rgba(255, 206, 86, 1)',
+							'rgba(75, 192, 192, 1)',
+							'rgba(153, 102, 255, 1)',
+							'rgba(255, 159, 64, 1)',
+							'rgba(255,99,132,1)',
+							'rgba(54, 162, 235, 1)',
+							'rgba(255, 206, 86, 1)',
+							'rgba(75, 192, 192, 1)'
+							],
+							borderWidth: 1
+						}
+					]
+				},
+				options: {
+					scales: {
+						xAxes : [{
+							display: true
+						}],
+						yAxes: [{
+							ticks: {
+								beginAtZero:true
+							},
+							display: true
+						}]
+					},
+					legend: {display:false}
+				}
+				
+			});
+		});	 
+	}
 }
+//https://www.youtube.com/watch?v=RTzi5DS7On4 

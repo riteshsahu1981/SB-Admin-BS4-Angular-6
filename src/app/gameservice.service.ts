@@ -24,9 +24,30 @@ export class GameserviceService {
 	  let body = res;
 	  return body || { };
 	}
+	getYears(): Observable<any> {
+		return this.http.get(endpoint + 'years/').pipe(
+		map(this.extractData)); 
+	}
+	getGamesReleases(year): Observable<any> {
+		return this.http.get(endpoint + 'gamesreleases/?year=' + year ).pipe(
+		map(this.extractData)); 
+	}
+	getGamesAge(age): Observable<any> {
+		return this.http.get(endpoint + 'getgamesage/?age=' + age ).pipe(
+		map(this.extractData)); 
+	}
+	getGamesGenre(genre): Observable<any> {
+		return this.http.get(endpoint + 'generegame/?genre=' + genre ).pipe(
+		map(this.extractData)); 
+	}
+	
+	getAge(): Observable<any> {
+		return this.http.get(endpoint + 'age/').pipe(
+		map(this.extractData)); 
+	}
 	
 	getSales(): Observable<any> {
-	  return this.http.get(endpoint + 'sales/').pipe(
+	  return this.http.get(endpoint + 'sales/10/').pipe(
 		map(this.extractData)); 
 		//return this.http.get(endpoint + 'sales');
 	}
